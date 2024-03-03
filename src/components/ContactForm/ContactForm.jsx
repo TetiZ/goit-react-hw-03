@@ -1,6 +1,7 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useId } from "react";
 import * as Yup from "yup";
+import { nanoid } from "nanoid";
 
 const formValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -8,24 +9,30 @@ const formValidationSchema = Yup.object().shape({
     .max(50, "Too long!")
     .required("Required"),
 
-  phone: Yup.string()
-    .min(4, "Too short!")
-    .max(50, "Too long!")
+  number: Yup.string()
+    .matches(/^[0-9]{3}-[0-9]{2}-[0-9]{2}$/, {
+      message: "Invalid phone number format, use XXX-XX-XX",
+      excludeEmptyString: true,
+    })
     .required("Required"),
 });
 
-export default function ContactForm({ handleFormSubmit }) {
+export default function ContactForm({ onAdd }) {
   const userName = useId();
   const userPhoneNumber = useId();
   return (
     <Formik
       initialValues={{
         name: "",
-        phone: "",
+        number: "",
       }}
       onSubmit={(values, action) => {
         console.log(values);
-        handleFormSubmit(values);
+        onAdd({
+          id: nanoid(),
+          name: values.name,
+          number: values.number,
+        });
         action.resetForm();
       }}
       validationSchema={formValidationSchema}
@@ -40,12 +47,12 @@ export default function ContactForm({ handleFormSubmit }) {
         <div>
           <label htmlFor={userPhoneNumber}>Number</label>
           <Field
-            name="phone"
+            name="number"
             id={userPhoneNumber}
             type="tel"
             pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}"
           ></Field>
-          <ErrorMessage component="span" name="phone"></ErrorMessage>
+          <ErrorMessage component="span" name="number"></ErrorMessage>
         </div>
 
         <button type="submit">Add contact</button>
