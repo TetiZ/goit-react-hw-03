@@ -1,20 +1,30 @@
-// import css from "./App.module.css";
-// import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContactForm from "../ContactForm/ContactForm";
 import SearchBox from "../SearchBox/SearchBox";
 import ContactList from "../ContactList/ContactList";
-import initialContactList from "../../contacts.json";
+// import initialContactList from "../../contacts.json";
+
+const storedContacts = () => {
+  const savedContacts = window.localStorage.getItem("contacts");
+  return savedContacts !== null ? JSON.parse(savedContacts) : [];
+};
 
 export default function App() {
-  const [contacts, setContacts] = useState(initialContactList);
+  const [contacts, setContacts] = useState(storedContacts);
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    window.localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = (newContact) => {
     setContacts((prevContacts) => {
       return [...prevContacts, newContact];
     });
   };
+  useEffect(() => {
+    window.localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
 
   const deleteContact = (contactId) => {
     setContacts((prevContacts) => {

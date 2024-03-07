@@ -6,7 +6,7 @@ import css from "./ContactForm.module.css";
 
 const formValidationSchema = Yup.object().shape({
   name: Yup.string()
-    .min(4, "Too short!")
+    .min(3, "Too short!")
     .max(50, "Too long!")
     .required("Required"),
 
@@ -42,7 +42,11 @@ export default function ContactForm({ onAdd }) {
         <div>
           <label htmlFor={userName}>Name</label>
           <Field className={css.input} name="name" id={userName}></Field>
-          <ErrorMessage component="span" name="name"></ErrorMessage>
+          <ErrorMessage
+            className={css.error}
+            component="span"
+            name="name"
+          ></ErrorMessage>
         </div>
 
         <div>
@@ -53,8 +57,13 @@ export default function ContactForm({ onAdd }) {
             id={userPhoneNumber}
             type="tel"
             pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}"
+            placeholder="XXX-XX-XX"
           ></Field>
-          <ErrorMessage component="span" name="number"></ErrorMessage>
+          <ErrorMessage
+            className={css.error}
+            component="span"
+            name="number"
+          ></ErrorMessage>
         </div>
 
         <button className={css.btn} type="submit">
