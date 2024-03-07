@@ -22,9 +22,6 @@ export default function App() {
       return [...prevContacts, newContact];
     });
   };
-  useEffect(() => {
-    window.localStorage.setItem("contacts", JSON.stringify(contacts));
-  }, [contacts]);
 
   const deleteContact = (contactId) => {
     setContacts((prevContacts) => {
